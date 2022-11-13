@@ -5,13 +5,6 @@
 //all questions are limited to four possible answers.
 //all questions are pulled from a static list instead of being generated when called. (some questions are repeats and simple math could generate Q/A's)
 //the starting button does not disappear.
-//once the quiz is complete, the answer buttons don't disappear.
-//the score page is on the same page as the quiz
-
-
-
-//current program limitations impacting grading:
-//the application user interface is not clean and polished.
 
 
 //WHEN the game is over
@@ -27,10 +20,17 @@ var answerBox2 = document.querySelector("#answerButton2");
 var answerBox3 = document.querySelector("#answerButton3");
 var answerBox4 = document.querySelector("#answerButton4");
 var incorrectAnswer = document.querySelector("#penaltyBox");
+var answerButtons = document.getElementById("answerButtons");
+var ourQuizBody = document.getElementById("mainQuizBody");
+var addHighScore = document.getElementById("addHighScore");
+var scores = document.getElementById("scores");
 var timeLeft = 75;
 var timerActive = false;
 var questionsToAsk = 10;
 var currentQuestion;
+
+ourQuizBody.style.visibility = "hidden";
+addHighScore.style.display = "none";
 
 //WHEN I click the start button
 //THEN a timer starts and I am presented with a question
@@ -63,7 +63,18 @@ answerBox4.addEventListener("click", function(){
     }
 })
 
+scores.addEventListener("click", function() {
+
+})
+
+//addHighScore.addEventListener("click", function(){
+  //  localStorage.setItem()
+//})
+
+
 function timer() {
+    myCountDown.textContent = timeLeft + " seconds remaining!";
+
     if(timerActive == false) {
         timerActive = true;
         var timerInterval = setInterval(function() {
@@ -93,7 +104,9 @@ function askNextQuestion() {
 
 function playGame() {
     timer();
-    
+    ourQuizBody.style.visibility = "visible";
+    startingButton.style.visibility = "hidden";
+    scores.style.display = "none";
     currentQuestion = askNextQuestion();
 }
 
@@ -111,9 +124,13 @@ function correctAnswerSelected(){
         currentQuestion = askNextQuestion();
     }
     //else the game ends!
+    //with more time, gameEnd() would serve as a good function.
     else{
         timerActive = false;
         questionBox.textContent = "All questions have been answered. Your final score: "+timeLeft;
+        answerButtons.style.visibility = "hidden";
+        scores.style.display = "inline";
+        addHighScore.style.display = "inline";
     }
 }
 
@@ -133,6 +150,9 @@ function incorrectAnswerSelected(){
     else{
         timerActive = false;
         questionBox.textContent = "All questions have been answered. Your final score: "+timeLeft;
+        answerButtons.style.visibility = "hidden";
+        scores.style.display = "inline";
+        addHighScore.style.display = "inline";
     }
 }
 
@@ -306,4 +326,6 @@ var allQuizQuestions = [
     },
 
 ]
+
+
 

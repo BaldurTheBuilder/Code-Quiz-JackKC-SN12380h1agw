@@ -12,26 +12,26 @@
     <section>
         <h1>Music Theory Quiz</h1>
         <h3 id="countdownTimer">(Timer not begun)</h3>
+        <button id="scores">View High-Scores</button>
 
-    </section>
-
-    <section>
         <button id="startGame">Start</button>
     </section>
 
-    <section class="mainQuizBody">
-        <ol>
-            <p id="questionBox"></p>
+    <section id="mainQuizBody">
+        <p id="questionBox"></p>
+        <ol id="answerButtons">
             <button id="answerButton1"></button>
             <button id="answerButton2"></button>
             <button id="answerButton3"></button>
             <button id="answerButton4"></button>
         </ol>
+        <button id="addHighScore">Add to High-Scores</button>
         <section>       
-            <h3 id="penaltyBox"></h3>
+            <h5 id="penaltyBox"></h5>
         </section>
     </section>
 
+    <section id="highScoreList" style="display: hidden;"></section>
     <script src="./assets/javascript/script.js"></script>
 </body>
 </html>
