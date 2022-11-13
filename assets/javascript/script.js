@@ -1,14 +1,11 @@
 //from what I've read online, this import should work. It doesn't. Since having the questions be in a separate javascript file isn't required, I am moving its contents here.
 // import { allQuizQuestions } from "./questions";
 
-//current program limitations:
+//current program limitations (note: none of these are part of the challenge requirements):
 //all questions are limited to four possible answers.
+//all questions are pulled from a static list instead of being generated when called. (some questions are repeats and simple math could generate Q/A's)
 //the starting button does not disappear.
-//
 
-
-//WHEN all questions are answered or the timer reaches 0
-//THEN the game is over
 
 //WHEN the game is over
 //THEN I can save my initials and score
@@ -23,10 +20,17 @@ var answerBox2 = document.querySelector("#answerButton2");
 var answerBox3 = document.querySelector("#answerButton3");
 var answerBox4 = document.querySelector("#answerButton4");
 var incorrectAnswer = document.querySelector("#penaltyBox");
-var timeLeft = 200;
+var answerButtons = document.getElementById("answerButtons");
+var ourQuizBody = document.getElementById("mainQuizBody");
+var addHighScore = document.getElementById("addHighScore");
+var scores = document.getElementById("scores");
+var timeLeft = 75;
 var timerActive = false;
 var questionsToAsk = 10;
 var currentQuestion;
+
+ourQuizBody.style.visibility = "hidden";
+addHighScore.style.display = "none";
 
 //WHEN I click the start button
 //THEN a timer starts and I am presented with a question
@@ -36,30 +40,48 @@ startingButton.addEventListener("click", function(){
 });
 
 answerBox1.addEventListener("click", function(){
-    answerTester(currentQuestion,1);
+    if(timerActive) {
+        answerTester(currentQuestion,1);
+    }
 })
 
 answerBox2.addEventListener("click", function(){
-    answerTester(currentQuestion,2);
+    if(timerActive) {
+        answerTester(currentQuestion,2);
+    }
 })
 
 answerBox3.addEventListener("click", function(){
-    answerTester(currentQuestion,3);
+    if(timerActive) {
+        answerTester(currentQuestion,3);
+    }
 })
 
 answerBox4.addEventListener("click", function(){
-    answerTester(currentQuestion,4);
+    if(timerActive) {
+        answerTester(currentQuestion,4);
+    }
 })
 
+scores.addEventListener("click", function() {
+
+})
+
+//addHighScore.addEventListener("click", function(){
+  //  localStorage.setItem()
+//})
+
+
 function timer() {
+    myCountDown.textContent = timeLeft + " seconds remaining!";
+
     if(timerActive == false) {
         timerActive = true;
         var timerInterval = setInterval(function() {
             timeLeft --;
             myCountDown.textContent = timeLeft + " seconds remaining!";
 
-            if(timeLeft < 1) {
-                timerActive = false;
+            if(timeLeft < 1 || timerActive == false) {
                 clearInterval(timerInterval);
             }
         }, 1000);
@@ -82,25 +104,34 @@ function askNextQuestion() {
 
 function playGame() {
     timer();
-    
+    ourQuizBody.style.visibility = "visible";
+    startingButton.style.visibility = "hidden";
+    scores.style.display = "none";
     currentQuestion = askNextQuestion();
 }
 
 //WHEN I answer a question
 //THEN I am presented with another question
+//WHEN all questions are answered or the timer reaches 0
+//THEN the game is over
 function correctAnswerSelected(){
     penaltyBox.textContent = "";
     questionsToAsk--;
 
     if(questionsToAsk > 0 && timeLeft > 0){
+        //remove the question from the list so it isn't repeated
         allQuizQuestions.splice(currentQuestion,1);
         currentQuestion = askNextQuestion();
     }
     //else the game ends!
+    //with more time, gameEnd() would serve as a good function.
     else{
-        questionBox.textContent = "All questions have been answered. Good game!";
+        timerActive = false;
+        questionBox.textContent = "All questions have been answered. Your final score: "+timeLeft;
+        answerButtons.style.visibility = "hidden";
+        scores.style.display = "inline";
+        addHighScore.style.display = "inline";
     }
-    //remove the question from the list so it isn't repeated
 }
 
 //WHEN I answer a question incorrectly
@@ -111,15 +142,18 @@ function incorrectAnswerSelected(){
     questionsToAsk--;
 
     if(questionsToAsk > 0 && timeLeft > 0){
+       //remove the question from the list so it isn't repeated
         allQuizQuestions.splice(currentQuestion,1);
         currentQuestion = askNextQuestion();
     }
     //else the game ends!
     else{
-        questionBox.textContent = "All questions have been answered. Good game!";
+        timerActive = false;
+        questionBox.textContent = "All questions have been answered. Your final score: "+timeLeft;
+        answerButtons.style.visibility = "hidden";
+        scores.style.display = "inline";
+        addHighScore.style.display = "inline";
     }
-    //remove the question from the list so it isn't repeated
-
 }
 
 function answerTester(selectedQuestion,whichButton) {
@@ -292,4 +326,6 @@ var allQuizQuestions = [
     },
 
 ]
+
+
 
