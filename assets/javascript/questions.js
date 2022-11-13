@@ -3,6 +3,9 @@
 //instead of just an array of 25 premade question objects.
 //additionally, we could randomize the order of the bubbles each time the question is called.
 
+//see script.js.
+// export {allQuizQuestions};
+
 var allQuizQuestions = [
     //relative minor questions
     {
@@ -162,3 +165,4 @@ var allQuizQuestions = [
     },
 
 ]
+
