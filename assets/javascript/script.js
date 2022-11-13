@@ -1,12 +1,11 @@
 //from what I've read online, this import should work. It doesn't. Since having the questions be in a separate javascript file isn't required, I am moving its contents here.
 // import { allQuizQuestions } from "./questions";
 
+//current program limitations:
+//all questions are limited to four possible answers.
+//the starting button does not disappear.
+//
 
-//WHEN I answer a question
-//THEN I am presented with another question
-
-//WHEN I answer a question incorrectly
-//THEN time is subtracted from the clock
 
 //WHEN all questions are answered or the timer reaches 0
 //THEN the game is over
@@ -19,7 +18,12 @@
 var myCountDown = document.querySelector("#countdownTimer");
 var startingButton = document.querySelector("#startGame");
 var questionBox = document.querySelector("#questionBox");
-var timeLeft = 75;
+var answerBox1 = document.querySelector("#answerButton1");
+var answerBox2 = document.querySelector("#answerButton2");
+var answerBox3 = document.querySelector("#answerButton3");
+var answerBox4 = document.querySelector("#answerButton4");
+var incorrectAnswer = document.querySelector("#penaltyBox");
+var timeLeft = 200;
 var timerActive = false;
 var questionsToAsk = 10;
 var currentQuestion;
@@ -31,6 +35,21 @@ startingButton.addEventListener("click", function(){
     //ideally, the button will disappear after clicking it. Technically this isn't part of the challenge requirements.
 });
 
+answerBox1.addEventListener("click", function(){
+    answerTester(currentQuestion,1);
+})
+
+answerBox2.addEventListener("click", function(){
+    answerTester(currentQuestion,2);
+})
+
+answerBox3.addEventListener("click", function(){
+    answerTester(currentQuestion,3);
+})
+
+answerBox4.addEventListener("click", function(){
+    answerTester(currentQuestion,4);
+})
 
 function timer() {
     if(timerActive == false) {
@@ -48,22 +67,72 @@ function timer() {
 }
 
 function askNextQuestion() {
-    if(questionsToAsk > 0){
         //randomly select a question from our list
-        let currentQuestion = Math.floor(Math.random() * allQuizQuestions.length);
+        let selectedQuestion = Math.floor(Math.random() * allQuizQuestions.length);
         //ask the question
-        questionBox.textContent = allQuizQuestions[currentQuestion].question;
-        //remove the question from the list
-        allQuizQuestions.splice(currentQuestion,1);
-    }
+        questionBox.textContent = allQuizQuestions[selectedQuestion].question;
+        //there's probably a way to use a for loop for this. Right now I'm sick and trying to get this done, so I'm just cycling through the buttons.
+        answerBox1.textContent = allQuizQuestions[selectedQuestion].bubbles[0];
+        answerBox2.textContent = allQuizQuestions[selectedQuestion].bubbles[1];
+        answerBox3.textContent = allQuizQuestions[selectedQuestion].bubbles[2];
+        answerBox4.textContent = allQuizQuestions[selectedQuestion].bubbles[3];
+
+        return selectedQuestion;
 }
 
 function playGame() {
     timer();
-    askNextQuestion();
+    
+    currentQuestion = askNextQuestion();
 }
 
+//WHEN I answer a question
+//THEN I am presented with another question
+function correctAnswerSelected(){
+    penaltyBox.textContent = "";
+    questionsToAsk--;
 
+    if(questionsToAsk > 0 && timeLeft > 0){
+        allQuizQuestions.splice(currentQuestion,1);
+        currentQuestion = askNextQuestion();
+    }
+    //else the game ends!
+    else{
+        questionBox.textContent = "All questions have been answered. Good game!";
+    }
+    //remove the question from the list so it isn't repeated
+}
+
+//WHEN I answer a question incorrectly
+//THEN time is subtracted from the clock
+function incorrectAnswerSelected(){
+    penaltyBox.textContent = "incorrect answer; time penalty applied!";
+    timeLeft-=5;
+    questionsToAsk--;
+
+    if(questionsToAsk > 0 && timeLeft > 0){
+        allQuizQuestions.splice(currentQuestion,1);
+        currentQuestion = askNextQuestion();
+    }
+    //else the game ends!
+    else{
+        questionBox.textContent = "All questions have been answered. Good game!";
+    }
+    //remove the question from the list so it isn't repeated
+
+}
+
+function answerTester(selectedQuestion,whichButton) {
+    console.log("our question is: "+allQuizQuestions[selectedQuestion].question+" with a correct answer of: "+allQuizQuestions[selectedQuestion].answer+
+    ", and you selected button "+whichButton+" which shows as "+allQuizQuestions[selectedQuestion].bubbles[whichButton-1]);
+    if(allQuizQuestions[selectedQuestion].bubbles[whichButton-1] == allQuizQuestions[selectedQuestion].answer) {
+        correctAnswerSelected();
+    }
+    else{
+        incorrectAnswerSelected();
+    }
+
+}
 var allQuizQuestions = [
     //relative minor questions
     {
